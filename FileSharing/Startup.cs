@@ -31,6 +31,9 @@ namespace FileSharing
             services.AddDbContext<UserContext>(
                 options => options.UseSqlServer(connection)
             );
+            services.AddDbContext<FileContext>(
+                options => options.UseSqlServer(connection)
+            );
 
             services.Configure<CookiePolicyOptions>(options =>
             {
