@@ -7,7 +7,7 @@ namespace FileSharing.Models
     [Table("Users")]
     public class User
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         [StringLength(100)]

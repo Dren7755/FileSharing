@@ -7,13 +7,7 @@ namespace FileSharing.Models
     [Table("Files")]
     public class File
     {
-        public int Id { get; set; }
-
-        public int UserId { get; set; }
-        public User User { get; set; }
-
-        [Required]
-        public int LinkId { get; set; }
+        public int FileId { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -33,5 +27,11 @@ namespace FileSharing.Models
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime ExpiresDate { get; set; }
+
+        [Required]
+        public User User { get; set; }
+
+        [Required]
+        public Link Link { get; set; }
     }
 }
