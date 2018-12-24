@@ -6,7 +6,7 @@ namespace FileSharing.Controllers
     {
         public IActionResult Index()
         {
-            return Redirect("/user");
+            return Content(User.Identity.Name == null ? "not authorized" : "authorized");
         }
     }
 }

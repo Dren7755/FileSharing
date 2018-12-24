@@ -1,13 +1,14 @@
 ﻿@model IEnumerable<FileSharing.Models.User>
 @{
-    ViewData["Title"] = "User Controller";
+    ViewData["Title"] = "List of users";
 }
 
 <a asp-action="registration">Регистрация</a>
+
 <table class="table">
-    <tr><td>Login</td><td>Password</td></tr>
+    <tr><td>Email</td><td>Login</td><td>Password</td></tr>
     @foreach (var item in Model)
     {
-        <tr><td>@item.Login</td><td>@item.Password</td></tr>
+        <tr><td>@item.Email</td><td>@item.Login</td><td>@item.Password</td></tr>
     }
 </table>
