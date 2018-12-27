@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using FileSharing.Models;
+using FileSharing.Models.UserModel;
 using FileSharing.ViewModels;
 using FileSharing.Infrastructure;
 using Microsoft.EntityFrameworkCore;

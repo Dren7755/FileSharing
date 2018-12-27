@@ -1,4 +1,6 @@
-﻿using FileSharing.Models;
+﻿using FileSharing.Models.UserModel;
+using FileSharing.Models.FileModel;
+using FileSharing.Models.LinkModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace FileSharing.Infrastructure

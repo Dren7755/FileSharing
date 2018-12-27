@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using FileSharing.Models;
+using FileSharing.Models.FileModel;
+using FileSharing.Models.UserModel;
 using FileSharing.Infrastructure;
 
 namespace FileSharing.Controllers
@@ -52,7 +53,8 @@ namespace FileSharing.Controllers
                     await uploadFile.CopyToAsync(fileStream);
                 }
                 User currentUser = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
-                Models.File file = new Models.File {
+
+                Models.FileModel.File file = new Models.FileModel.File {
                     FileName = uploadFile.FileName,
                     RealPath = filePath,
                     Size = uploadFile.Length,

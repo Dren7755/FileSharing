@@ -2,14 +2,14 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FileSharing.Models
+namespace FileSharing.Models.UserModel
 {
     [Table("Users")]
     public class User
     {
         public User()
         {
-            this.Files = new List<File>();
+            Files = new List<FileModel.File>();
         }
 
         public int UserId { get; set; }
@@ -26,6 +26,6 @@ namespace FileSharing.Models
         [StringLength(100)]
         public string Password { get; set; }
 
-        public ICollection<File> Files { get; set; }
+        public ICollection<FileModel.File> Files { get; set; }
     }
 }

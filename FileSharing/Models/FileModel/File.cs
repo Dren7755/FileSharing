@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FileSharing.Models
+namespace FileSharing.Models.FileModel
 {
     [Table("Files")]
     public class File
@@ -34,9 +34,9 @@ namespace FileSharing.Models
 
         [Required]
         public int UserId { get; set; }
-        public User User { get; set; }
+        public UserModel.User User { get; set; }
 
         [Required]
-        public Link Link { get; set; }
+        public LinkModel.Link Link { get; set; }
     }
 }
