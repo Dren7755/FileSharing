@@ -11,7 +11,7 @@ namespace FileSharing.Models
 
         [Required]
         [StringLength(100)]
-        public string Filename { get; set; }
+        public string FileName { get; set; }
 
         [Required]
         [StringLength(512)]
@@ -19,6 +19,10 @@ namespace FileSharing.Models
 
         [Required]
         public long Size { get; set; }
+
+        [Required]
+        [StringLength(64)]
+        public string ContentType { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]
@@ -29,6 +33,7 @@ namespace FileSharing.Models
         public DateTime ExpiresDate { get; set; }
 
         [Required]
+        public int UserId { get; set; }
         public User User { get; set; }
 
         [Required]

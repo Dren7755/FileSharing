@@ -1,0 +1,16 @@
+﻿@model IEnumerable<FileSharing.Models.File>
+
+@{
+    ViewData["Title"] = "Files";
+}
+
+<form asp-action="Upload" asp-controller="File" method="post" enctype="multipart/form-data" asp-antiforgery="true">
+    <input type="file" name="uploadFile" /><br />
+    <input type="submit" value="Загрузить" />
+</form>
+
+<h3>Все файлы</h3>
+@foreach(var file in Model)
+{
+    <p>@file.FileName -> @file.RealPath</p>
+}

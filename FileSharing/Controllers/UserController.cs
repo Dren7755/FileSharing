@@ -14,16 +14,16 @@ namespace FileSharing.Controllers
 {
     public class UserController : Controller
     {
-        private UserContext db;
+        private DataContext dataContext;
 
-        public UserController(UserContext context)
+        public UserController(DataContext dataContext)
         {
-            this.db = context;
+            this.dataContext = dataContext;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await db.Users.ToListAsync());
+            return View(await dataContext.Users.ToListAsync());
         }
 
         [HttpGet]
@@ -38,7 +38,7 @@ namespace FileSharing.Controllers
         {
             if(ModelState.IsValid)
             {
-                User user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+                User user = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
                 if(user != null)
                 {
                     await Authenticate(model.Email);
@@ -60,11 +60,11 @@ namespace FileSharing.Controllers
         {
             if(ModelState.IsValid)
             {
-                User user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+                User user = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
                 if(user == null)
                 {
-                    db.Users.Add(new User { Email = model.Email, Password = model.Password, Login = model.Login });
-                    await db.SaveChangesAsync();
+                    dataContext.Users.Add(new User { Email = model.Email, Password = model.Password, Login = model.Login });
+                    await dataContext.SaveChangesAsync();
                     await Authenticate(model.Email);
                     return RedirectToAction("Index");
                 }
