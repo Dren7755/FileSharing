@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "Upload";
+}
+
+<form asp-action="Upload" asp-controller="File" method="post" enctype="multipart/form-data" asp-antiforgery="true">
+    <input type="file" name="uploadFile" /><br />
+    <input type="submit" value="Загрузить" />
+</form>

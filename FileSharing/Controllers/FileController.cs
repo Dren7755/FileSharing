@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using FileSharing.Models;
 using FileSharing.Infrastructure;
-
 
 namespace FileSharing.Controllers
 {
@@ -32,6 +32,13 @@ namespace FileSharing.Controllers
             return View(dataContext.Files.ToList());
         }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult Upload()
+        {
+            return View();
+        }
+
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -44,7 +51,7 @@ namespace FileSharing.Controllers
                 {
                     await uploadFile.CopyToAsync(fileStream);
                 }
-                Models.User currentUser = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+                User currentUser = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
                 Models.File file = new Models.File {
                     FileName = uploadFile.FileName,
                     RealPath = filePath,
@@ -52,9 +59,9 @@ namespace FileSharing.Controllers
                     ContentType = uploadFile.ContentType,
                     CreatedDate = DateTime.UtcNow,
                     ExpiresDate = DateTime.UtcNow.AddDays(FileController.EXPIRES_DAYS),
-                    User = currentUser,
-                    Link = new Models.Link { Uri = currentUser.Login + "/" + uploadFile.FileName, AccessPassword = "accessPassword" }
+                    User = currentUser
                 };
+                file.Link = LinkFactory.CreateLink(file);
                 dataContext.Files.Add(file);
                 await dataContext.SaveChangesAsync();
             }

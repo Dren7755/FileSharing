@@ -18,7 +18,6 @@ namespace FileSharing.Models
 
         [Required]
         public int FileId { get; set; }
-        [Required]
         public File File { get; set; }
     }
 }
