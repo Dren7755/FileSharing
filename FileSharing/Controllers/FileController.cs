@@ -15,8 +15,7 @@ namespace FileSharing.Controllers
 {
     public class FileController : Controller
     {
-        private const string FILE_DIR = "/UploadedFiles/";
-        private const int EXPIRES_DAYS = 30;
+        private const int EXPIRES_DAYS = 30;    //todo: move to core_config_data
 
         private DataContext dataContext;
 
@@ -47,12 +46,17 @@ namespace FileSharing.Controllers
         {
             if (uploadFile != null)
             {
-                string filePath = FileController.FILE_DIR + uploadFile.FileName;
-                using (var fileStream = new FileStream(hostingEnvironment.WebRootPath + filePath, FileMode.Create))
+                User currentUser = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+
+                string filePath = FileHelper.CreateFilePath(
+                    hostingEnvironment.WebRootPath,
+                    uploadFile.FileName,
+                    currentUser.Login
+                );
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     await uploadFile.CopyToAsync(fileStream);
                 }
-                User currentUser = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
 
                 Models.FileModel.File file = new Models.FileModel.File {
                     FileName = uploadFile.FileName,
