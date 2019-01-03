@@ -1,14 +1,16 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using FileSharing.Models.UserModel;
+using FileSharing.Models.FileModel;
 using FileSharing.ViewModels;
 using FileSharing.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace FileSharing.Controllers
 {
@@ -21,9 +23,15 @@ namespace FileSharing.Controllers
             this.dataContext = dataContext;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            return View(await dataContext.Users.ToListAsync());
+            User currentUser = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+            List<File> files = await dataContext.Files.Where(f => f.User.UserId == currentUser.UserId).ToListAsync();
+            foreach(var file in files)
+                await dataContext.Entry(file).Reference(f => f.Link).LoadAsync();
+            ViewBag.BaseUrl = Request.PathBase;
+            return View(files);
         }
 
         [HttpGet]
@@ -41,7 +49,7 @@ namespace FileSharing.Controllers
                 User user = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
                 if(user != null)
                 {
-                    await Authenticate(model.Email);
+                    await Authenticate(user);
                     return RedirectToAction("Index");
                 }
                 ModelState.AddModelError("", "Неверный логин или пароль");
@@ -58,20 +66,18 @@ namespace FileSharing.Controllers
         [HttpPost]
         public async Task<IActionResult> Registration(RegisterModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 User user = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
                 if(user == null)
                 {
-                    dataContext.Users.Add(new User { Email = model.Email, Password = model.Password, Login = model.Login });
+                    user = new User { Email = model.Email, Password = model.Password, Login = model.Login };
+                    dataContext.Users.Add(user);
                     await dataContext.SaveChangesAsync();
-                    await Authenticate(model.Email);
+                    await Authenticate(user);
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Такой пользователь уже существует");
-                }
+                ModelState.AddModelError("", "Такой пользователь уже существует");
             }
             return View(model);
         }
@@ -82,11 +88,11 @@ namespace FileSharing.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private async Task Authenticate(string email)
+        private async Task Authenticate(User user)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, email)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email)
             };
             ClaimsIdentity id = new ClaimsIdentity(
                 claims,

@@ -1,14 +1,21 @@
-﻿@model IEnumerable<FileSharing.Models.UserModel.User>
+﻿@model IEnumerable<FileSharing.Models.FileModel.File>
 @{
     ViewData["Title"] = "List of users";
+    string url = null;
 }
 
-<a asp-action="registration">Регистрация</a>
+<h2>Ваши файлы</h2>
 
 <table class="table">
-    <tr><td>Email</td><td>Login</td><td>Password</td></tr>
-    @foreach (var item in Model)
+    <tr><td>Имя файла</td><td>Пароль</td><td>Тип</td><td>Дата загрузки</td></tr>
+    @foreach (var file in Model)
     {
-        <tr><td>@item.Email</td><td>@item.Login</td><td>@item.Password</td></tr>
+        url = ViewBag.BaseUrl + "File/Get/" + file.Link.Uri;
+        <tr>
+            <td><a href="@url">@file.FileName</a></td>
+            <td>@file.Link.AccessPassword</td>
+            <td>@file.ContentType</td>
+            <td>@file.CreatedDate</td>
+        </tr>
     }
 </table>

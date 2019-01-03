@@ -1,12 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Скачать файл";
 }
-@if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"].Errors.Count > 0)
-{
-    <div class="danger">
-        @ViewData.ModelState["Error"].Errors.First().ErrorMessage
-    </div>
-}
 
 <form asp-action="Get" asp-controller="File" method="post" asp-antiforgery="true">
     <input type="hidden" name="fileId" value="@ViewBag.fileId" />

@@ -9,6 +9,23 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
+    <div class="header">
+        @if (User.Identity.IsAuthenticated) {
+            <a asp-controller="User" asp-action="Index">Личный кабинет</a>
+            <a asp-controller="User" asp-action="Logout">Выход</a>
+        } else {
+            <a asp-controller="User" asp-action="Login">Войти</a>
+            <a asp-controller="User" asp-action="Registration">Регистрация</a>
+        }
+    </div>
+    <div class="header-errors">
+        @if (!ViewData.ModelState.IsValid && ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+        {
+            <div class="danger">
+                @ViewData.ModelState[""].Errors.First().ErrorMessage
+            </div>
+        }
+    </div>
     <div class="body-content">
         @RenderBody()
     </div>

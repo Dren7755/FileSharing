@@ -92,7 +92,7 @@ namespace FileSharing.Controllers
             if (file.Link.AccessPassword == accessPassword)
                 return PhysicalFile(file.RealPath, file.ContentType, file.FileName);
             
-            ModelState.AddModelError("Error", "Неверный пароль доступа к файлу");
+            ModelState.AddModelError("", "Неверный пароль доступа к файлу");
             ViewBag.fileId = file.FileId;
             return View();
         }
