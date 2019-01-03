@@ -4,7 +4,11 @@
     {
         public static LinkModel.Link CreateLink(File file)
         {
-            return new LinkModel.Link { Uri = file.User.Login + "/" + file.FileName, AccessPassword = "accessPassword" };
+            string createdDate = file.CreatedDate.ToString();
+            string uri = file.User.Login + "-" + createdDate + "-" + file.FileName;
+            return new LinkModel.Link {
+                Uri = uri.Replace(" ", "_")
+            };
         }
     }
 }

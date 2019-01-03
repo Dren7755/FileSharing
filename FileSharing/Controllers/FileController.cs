@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using FileSharing.Models.FileModel;
 using FileSharing.Models.UserModel;
 using FileSharing.Infrastructure;
+using FileSharing.Models.LinkModel;
 
 namespace FileSharing.Controllers
 {
@@ -73,5 +74,38 @@ namespace FileSharing.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Get(string id)
+        {
+            Models.FileModel.File file = await LoadFile(f => f.Link.Uri == id);
+            if (file.Link.AccessPassword == null)
+                return PhysicalFile(file.RealPath, file.ContentType, file.FileName);
+
+            ViewBag.fileId = file.FileId;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Get(int fileId, string accessPassword)
+        {
+            Models.FileModel.File file = await LoadFile(f => f.FileId == fileId);
+            if (file.Link.AccessPassword == accessPassword)
+                return PhysicalFile(file.RealPath, file.ContentType, file.FileName);
+            
+            ModelState.AddModelError("Error", "Неверный пароль доступа к файлу");
+            ViewBag.fileId = file.FileId;
+            return View();
+        }
+
+        private async Task<Models.FileModel.File> LoadFile(
+            System.Linq.Expressions.Expression<Func<Models.FileModel.File, bool>> predicate
+        ) {
+            Models.FileModel.File file = await dataContext.Files.FirstOrDefaultAsync(predicate);
+            if (file == null)
+                throw new Exception("File not found");
+            await dataContext.Entry(file).Reference(f => f.Link).LoadAsync();
+            return file;
+        }
+
     }
 }
