@@ -7,12 +7,16 @@
 <h2>Ваши файлы</h2>
 
 <table class="table">
-    <tr><td>Имя файла</td><td>Пароль</td><td>Тип</td><td>Дата загрузки</td></tr>
+    <tr>
+        <td>Имя файла</td><td>Пароль</td><td>Тип</td><td>Дата загрузки</td>
+    </tr>
     @foreach (var file in Model)
     {
         url = ViewBag.BaseUrl + "File/Get/" + file.Link.Uri;
         <tr>
-            <td><a href="@url">@file.FileName</a></td>
+            <td>
+                <a href="@url">@file.FileName</a>
+            </td>
             <td>@file.Link.AccessPassword</td>
             <td>@file.ContentType</td>
             <td>@file.CreatedDate</td>

@@ -28,7 +28,7 @@ namespace FileSharing.Controllers
         {
             User currentUser = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
             List<File> files = await dataContext.Files.Where(f => f.User.UserId == currentUser.UserId).ToListAsync();
-            foreach(var file in files)
+            foreach (var file in files)
                 await dataContext.Entry(file).Reference(f => f.Link).LoadAsync();
             ViewBag.BaseUrl = Request.PathBase;
             return View(files);
@@ -44,16 +44,17 @@ namespace FileSharing.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            if(ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+
+            User user = await dataContext.Users.FirstOrDefaultAsync(u =>
+                u.Email == model.Email && u.Password == model.Password);
+            if (user != null)
             {
-                User user = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
-                if(user != null)
-                {
-                    await Authenticate(user);
-                    return RedirectToAction("Index");
-                }
-                ModelState.AddModelError("", "Неверный логин или пароль");
+                await Authenticate(user);
+                return RedirectToAction("Index");
             }
+
+            ModelState.AddModelError("", "Неверный логин или пароль");
             return View(model);
         }
 
@@ -69,16 +70,18 @@ namespace FileSharing.Controllers
             if (ModelState.IsValid)
             {
                 User user = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-                if(user == null)
+                if (user == null)
                 {
-                    user = new User { Email = model.Email, Password = model.Password, Login = model.Login };
+                    user = new User {Email = model.Email, Password = model.Password, Login = model.Login};
                     dataContext.Users.Add(user);
                     await dataContext.SaveChangesAsync();
                     await Authenticate(user);
                     return RedirectToAction("Index");
                 }
+
                 ModelState.AddModelError("", "Такой пользователь уже существует");
             }
+
             return View(model);
         }
 
@@ -102,6 +105,5 @@ namespace FileSharing.Controllers
             );
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
-
     }
 }

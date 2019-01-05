@@ -3,13 +3,13 @@
 }
 
 <form asp-action="Get" asp-controller="File" method="post" asp-antiforgery="true">
-    <input type="hidden" name="fileId" value="@ViewBag.fileId" />
+    <input type="hidden" name="fileId" value="@ViewBag.fileId"/>
     <div class="form-group">
         <label for="accessPassword">
-            Пароль доступа: <input type="password" name="accessPassword" />
+            Пароль доступа: <input type="password" name="accessPassword"/>
         </label>
     </div>
     <div class="form-group">
-        <input type="submit" value="Скачать" class="btn" />
+        <input type="submit" value="Скачать" class="btn"/>
     </div>
 </form>

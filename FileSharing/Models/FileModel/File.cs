@@ -9,20 +9,13 @@ namespace FileSharing.Models.FileModel
     {
         public int FileId { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string FileName { get; set; }
+        [Required] [StringLength(100)] public string FileName { get; set; }
 
-        [Required]
-        [StringLength(512)]
-        public string RealPath { get; set; }
+        [Required] [StringLength(512)] public string RealPath { get; set; }
 
-        [Required]
-        public long Size { get; set; }
+        [Required] public long Size { get; set; }
 
-        [Required]
-        [StringLength(64)]
-        public string ContentType { get; set; }
+        [Required] [StringLength(64)] public string ContentType { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]
@@ -32,11 +25,9 @@ namespace FileSharing.Models.FileModel
         [DataType(DataType.DateTime)]
         public DateTime ExpiresDate { get; set; }
 
-        [Required]
-        public int UserId { get; set; }
+        [Required] public int UserId { get; set; }
         public UserModel.User User { get; set; }
 
-        [Required]
-        public LinkModel.Link Link { get; set; }
+        [Required] public LinkModel.Link Link { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace FileSharing.Controllers
 {
     public class FileController : Controller
     {
-        private const int EXPIRES_DAYS = 30;    //todo: move to core_config_data
+        private const int EXPIRES_DAYS = 30; //todo: move to core_config_data
 
         private DataContext dataContext;
 
@@ -59,7 +59,8 @@ namespace FileSharing.Controllers
                     await uploadFile.CopyToAsync(fileStream);
                 }
 
-                Models.FileModel.File file = new Models.FileModel.File {
+                Models.FileModel.File file = new Models.FileModel.File
+                {
                     FileName = uploadFile.FileName,
                     RealPath = filePath,
                     Size = uploadFile.Length,
@@ -72,6 +73,7 @@ namespace FileSharing.Controllers
                 dataContext.Files.Add(file);
                 await dataContext.SaveChangesAsync();
             }
+
             return RedirectToAction("Index");
         }
 
@@ -91,7 +93,7 @@ namespace FileSharing.Controllers
             Models.FileModel.File file = await LoadFile(f => f.FileId == fileId);
             if (file.Link.AccessPassword == accessPassword)
                 return PhysicalFile(file.RealPath, file.ContentType, file.FileName);
-            
+
             ModelState.AddModelError("", "Неверный пароль доступа к файлу");
             ViewBag.fileId = file.FileId;
             return View();
@@ -99,13 +101,13 @@ namespace FileSharing.Controllers
 
         private async Task<Models.FileModel.File> LoadFile(
             System.Linq.Expressions.Expression<Func<Models.FileModel.File, bool>> predicate
-        ) {
+        )
+        {
             Models.FileModel.File file = await dataContext.Files.FirstOrDefaultAsync(predicate);
             if (file == null)
                 throw new Exception("File not found");
             await dataContext.Entry(file).Reference(f => f.Link).LoadAsync();
             return file;
         }
-
     }
 }

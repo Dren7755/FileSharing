@@ -6,7 +6,8 @@
         {
             string createdDate = file.CreatedDate.ToString();
             string uri = file.User.Login + "-" + createdDate + "-" + file.FileName;
-            return new LinkModel.Link {
+            return new LinkModel.Link
+            {
                 Uri = uri.Replace(" ", "_")
             };
         }

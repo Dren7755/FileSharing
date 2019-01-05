@@ -14,17 +14,11 @@ namespace FileSharing.Models.UserModel
 
         public int UserId { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string Login { get; set; }
+        [Required] [StringLength(100)] public string Login { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string Email { get; set; }
+        [Required] [StringLength(100)] public string Email { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string Password { get; set; }
+        [Required] [StringLength(100)] public string Password { get; set; }
 
         public ICollection<FileModel.File> Files { get; set; }
     }
