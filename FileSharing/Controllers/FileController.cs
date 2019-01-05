@@ -11,13 +11,12 @@ using FileSharing.Models.FileModel;
 using FileSharing.Models.UserModel;
 using FileSharing.Infrastructure;
 using FileSharing.Models.LinkModel;
+using FileSharing.ViewModels;
 
 namespace FileSharing.Controllers
 {
     public class FileController : Controller
     {
-        private const int EXPIRES_DAYS = 30; //todo: move to core_config_data
-
         private DataContext dataContext;
 
         private IHostingEnvironment hostingEnvironment;
@@ -43,37 +42,36 @@ namespace FileSharing.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upload(IFormFile uploadFile)
+        public async Task<IActionResult> Upload(FileUploadModel fileUploadModel)
         {
-            if (uploadFile != null)
+            if (!ModelState.IsValid) return View();
+
+            IFormFile uploadFile = fileUploadModel.UploadFile;
+            User currentUser = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+
+            string filePath = FileHelper.CreateFilePath(
+                hostingEnvironment.WebRootPath,
+                uploadFile.FileName,
+                currentUser.Login
+            );
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                User currentUser = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
-
-                string filePath = FileHelper.CreateFilePath(
-                    hostingEnvironment.WebRootPath,
-                    uploadFile.FileName,
-                    currentUser.Login
-                );
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await uploadFile.CopyToAsync(fileStream);
-                }
-
-                Models.FileModel.File file = new Models.FileModel.File
-                {
-                    FileName = uploadFile.FileName,
-                    RealPath = filePath,
-                    Size = uploadFile.Length,
-                    ContentType = uploadFile.ContentType,
-                    CreatedDate = DateTime.UtcNow,
-                    ExpiresDate = DateTime.UtcNow.AddDays(FileController.EXPIRES_DAYS),
-                    User = currentUser
-                };
-                file.Link = LinkFactory.CreateLink(file);
-                dataContext.Files.Add(file);
-                await dataContext.SaveChangesAsync();
+                await uploadFile.CopyToAsync(fileStream);
             }
 
+            Models.FileModel.File file = new Models.FileModel.File
+            {
+                FileName = uploadFile.FileName,
+                RealPath = filePath,
+                Size = uploadFile.Length,
+                ContentType = uploadFile.ContentType,
+                CreatedDate = DateTime.UtcNow,
+                User = currentUser
+            };
+            file.Link = LinkFactory.CreateLink(file, fileUploadModel.Password);
+            dataContext.Files.Add(file);
+            await dataContext.SaveChangesAsync();
+            
             return RedirectToAction("Index");
         }
 

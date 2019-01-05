@@ -21,10 +21,6 @@ namespace FileSharing.Models.FileModel
         [DataType(DataType.DateTime)]
         public DateTime CreatedDate { get; set; }
 
-        [Required]
-        [DataType(DataType.DateTime)]
-        public DateTime ExpiresDate { get; set; }
-
         [Required] public int UserId { get; set; }
         public UserModel.User User { get; set; }
 
