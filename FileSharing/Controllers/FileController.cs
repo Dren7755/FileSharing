@@ -29,7 +29,12 @@ namespace FileSharing.Controllers
 
         public IActionResult Index()
         {
-            return View(dataContext.Files.ToList());
+            return RedirectToAction("List");
+        }
+
+        public IActionResult List()
+        {
+            return View(dataContext.Files.ToList().OrderByDescending(f => f.CreatedDate));
         }
 
         [HttpGet]

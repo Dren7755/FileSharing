@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<FileSharing.Models.FileModel.File>
 @{
     ViewData["Title"] = "List of users";
-    string url = null;
 }
 
 <h2>Ваши файлы</h2>
@@ -12,10 +11,9 @@
     </tr>
     @foreach (var file in Model)
     {
-        url = ViewBag.BaseUrl + "File/Get/" + file.Link.Uri;
         <tr>
             <td>
-                <a href="@url">@file.FileName</a>
+                <a href="@file.Link.Url">@file.FileName</a>
             </td>
             <td>@file.Link.AccessPassword</td>
             <td>@file.ContentType</td>

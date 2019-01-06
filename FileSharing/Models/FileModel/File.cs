@@ -22,8 +22,8 @@ namespace FileSharing.Models.FileModel
         public DateTime CreatedDate { get; set; }
 
         [Required] public int UserId { get; set; }
-        public UserModel.User User { get; set; }
+        public virtual UserModel.User User { get; set; }
 
-        [Required] public LinkModel.Link Link { get; set; }
+        [Required] public virtual LinkModel.Link Link { get; set; }
     }
 }

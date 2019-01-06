@@ -20,6 +20,6 @@ namespace FileSharing.Models.UserModel
 
         [Required] [StringLength(100)] public string Password { get; set; }
 
-        public ICollection<FileModel.File> Files { get; set; }
+        public virtual ICollection<FileModel.File> Files { get; set; }
     }
 }

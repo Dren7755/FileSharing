@@ -12,7 +12,9 @@ namespace FileSharing.Models.LinkModel
 
         [Required] [StringLength(100)] public string Uri { get; set; }
 
+        [Required] [StringLength(200)] public string Url { get; set; }
+
         [Required] public int FileId { get; set; }
-        public FileModel.File File { get; set; }
+        public virtual FileModel.File File { get; set; }
     }
 }

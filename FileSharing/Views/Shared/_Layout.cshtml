@@ -20,6 +20,7 @@
         <a asp-controller="User" asp-action="Login">Войти</a>
         <a asp-controller="User" asp-action="Registration">Регистрация</a>
     }
+    <a asp-controller="File" asp-action="Upload">Загрузить файл</a>
 </div>
 <div class="header-errors">
     @if (!ViewData.ModelState.IsValid && ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)

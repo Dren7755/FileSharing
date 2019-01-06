@@ -24,7 +24,7 @@ namespace FileSharing
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<DataContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connection));
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>

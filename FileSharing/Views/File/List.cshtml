@@ -1,0 +1,21 @@
+﻿@model IEnumerable<FileSharing.Models.FileModel.File>
+
+@{
+    ViewData["Title"] = "Недавно загруженные";
+}
+
+<form method="get">
+
+</form>
+
+<h3>Недавно загруженные</h3>
+<div class="file-list">
+@foreach (var file in Model)
+{
+    <div>
+        <span class="user-name">@file.User.Login</span>: 
+        <a href="@file.Link.Url">@file.FileName</a> - @file.CreatedDate.ToString("{dd/MM/yyyy}")
+        @(file.Link.AccessPassword != null ? "🔒" : "")
+    </div>
+}
+</div>

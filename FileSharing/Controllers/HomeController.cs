@@ -6,7 +6,7 @@ namespace FileSharing.Controllers
     {
         public IActionResult Index()
         {
-            return RedirectToAction("Index", "File");
+            return RedirectToAction("List", "File");
         }
     }
 }

@@ -1,7 +1,14 @@
 ﻿@model FileSharing.ViewModels.LoginModel
 
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Вход в систему";
+}
+
+@if (ViewBag.Rejected != null && ViewBag.Rejected)
+{
+    <div class="alert-info">
+        Чтобы сделать это, необходимо войти в систему!
+    </div>
 }
 
 <form asp-action="Login" asp-controller="User" asp-antiforgery="true">

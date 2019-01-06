@@ -27,16 +27,13 @@ namespace FileSharing.Controllers
         public async Task<IActionResult> Index()
         {
             User currentUser = await dataContext.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
-            List<File> files = await dataContext.Files.Where(f => f.User.UserId == currentUser.UserId).ToListAsync();
-            foreach (var file in files)
-                await dataContext.Entry(file).Reference(f => f.Link).LoadAsync();
-            ViewBag.BaseUrl = Request.PathBase;
-            return View(files);
+            return View(currentUser.Files);
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl)
         {
+            ViewBag.Rejected = ReturnUrl != null;
             return View();
         }
 
