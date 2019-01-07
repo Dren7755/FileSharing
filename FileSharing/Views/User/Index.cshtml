@@ -7,7 +7,7 @@
 
 <table class="table">
     <tr>
-        <td>Имя файла</td><td>Пароль</td><td>Тип</td><td>Дата загрузки</td>
+        <td>Имя файла</td><td>Пароль</td><td>Тип</td><td>Дата загрузки</td><td>Удалить</td>
     </tr>
     @foreach (var file in Model)
     {
@@ -18,6 +18,9 @@
             <td>@file.Link.AccessPassword</td>
             <td>@file.ContentType</td>
             <td>@file.CreatedDate</td>
+            <td>
+                <a href="@FileSharing.Models.FileModel.FileHelper.CreateDeleteFileLink(file)">X</a>
+            </td>
         </tr>
     }
 </table>

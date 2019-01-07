@@ -102,6 +102,18 @@ namespace FileSharing.Controllers
             return View();
         }
 
+        [Authorize]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var file = await dataContext.Files.FirstOrDefaultAsync(f => f.FileId == id);
+            if (file == null)
+                throw new Exception("File not found");
+            System.IO.File.Delete(file.RealPath);
+            dataContext.Files.Remove(file);
+            await dataContext.SaveChangesAsync();
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+
         private async Task<Models.FileModel.File> LoadFile(
             System.Linq.Expressions.Expression<Func<Models.FileModel.File, bool>> predicate
         )
@@ -109,7 +121,6 @@ namespace FileSharing.Controllers
             Models.FileModel.File file = await dataContext.Files.FirstOrDefaultAsync(predicate);
             if (file == null)
                 throw new Exception("File not found");
-            await dataContext.Entry(file).Reference(f => f.Link).LoadAsync();
             return file;
         }
     }

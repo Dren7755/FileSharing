@@ -14,5 +14,10 @@ namespace FileSharing.Models.FileModel
 
             return dirPath + fileName;
         }
+
+        public static string CreateDeleteFileLink(File file)
+        {
+            return "/File/Delete/?id=" + file.FileId;
+        }
     }
 }
