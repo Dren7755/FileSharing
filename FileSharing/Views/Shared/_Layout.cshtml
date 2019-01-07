@@ -10,6 +10,11 @@
 </head>
 <body>
 <div class="header">
+    <div class="logo-block">
+        <a href="/">
+            <img src="~/images/logo.png" />
+        </a>
+    </div>
     @if (User.Identity.IsAuthenticated)
     {
         <a asp-controller="User" asp-action="Index">Личный кабинет</a>

@@ -32,9 +32,15 @@ namespace FileSharing.Controllers
             return RedirectToAction("List");
         }
 
-        public IActionResult List()
+        public IActionResult List(string query)
         {
-            return View(dataContext.Files.ToList().OrderByDescending(f => f.CreatedDate));
+            if(query == null)
+                return View(dataContext.Files.ToList().OrderByDescending(f => f.CreatedDate));
+            return View(dataContext.Files
+                .ToList()
+                .Where(f => f.FileName.ToLower().Contains(query.ToLower()))
+                .OrderByDescending(f => f.CreatedDate)
+            );
         }
 
         [HttpGet]
@@ -83,7 +89,7 @@ namespace FileSharing.Controllers
         public async Task<IActionResult> Get(string id)
         {
             Models.FileModel.File file = await LoadFile(f => f.Link.Uri == id);
-            if (file.Link.AccessPassword == null)
+            if (file.Link.AccessPassword == null || file.User.Email == User.Identity.Name)
                 return PhysicalFile(file.RealPath, file.ContentType, file.FileName);
 
             ViewBag.fileId = file.FileId;

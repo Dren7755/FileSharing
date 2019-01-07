@@ -4,8 +4,11 @@
     ViewData["Title"] = "Недавно загруженные";
 }
 
-<form method="get">
-
+<form asp-controller="File" asp-action="List" method="get">
+    <div class="form-group">
+        <label>Имя файла: <input type="text" name="query" /></label>
+        <input type="submit" value="Найти" class="btn" />
+    </div>
 </form>
 
 <h3>Недавно загруженные</h3>
